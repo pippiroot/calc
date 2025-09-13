@@ -3,84 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Calculator</title>
+    <title>Retro Casio Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
+            background: linear-gradient(135deg, #232323 0%, #444 100%);
+            min-height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
         }
 
         .calculator {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.5s ease;
+            border-radius: 24px;
+            border: 4px solid #222;
+            background: linear-gradient(180deg, #333 0%, #222 100%);
+            box-shadow:
+                0 8px 32px #111,
+                0 1px 0 #666 inset,
+                0 0 0 12px #1a1a1a inset,
+                0 2px 32px 8px #000c;
+            padding: 32px 24px 24px 24px;
+            width: 340px;
+            position: relative;
+            transition: transform 0.5s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.4s;
         }
 
         .calculator.upside-down {
             transform: rotate(180deg);
+            box-shadow:
+                0 24px 48px #111,
+                0 1px 0 #666 inset,
+                0 0 0 12px #1a1a1a inset,
+                0 4px 64px 16px #000c;
         }
 
+        .casio-logo {
+            font-family: 'Orbitron', Arial, sans-serif;
+            color: #98e5ff;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 6px #10171b, 0 0px 1px #fff;
+            text-align: center;
+            user-select: none;
+        }
+
+        .lcd-frame {
+            background: #111;
+            border-radius: 8px;
+            border: 2px solid #333;
+            box-shadow: 0 1px 4px #000 inset, 0 2px 12px #81e281;
+            margin-bottom: 18px;
+            padding: 8px 12px;
+        }
         .calculator-screen {
             width: 100%;
-            height: 40px;
-            margin-bottom: 10px;
-            font-size: 24px;
+            background: #b2ffb2;
+            color: #193a19;
+            font-size: 32px;
+            font-family: 'Orbitron', monospace;
             text-align: right;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            box-shadow: 0 1px 3px #244 inset, 0 0 8px #81e281;
+            letter-spacing: 2px;
+            font-weight: bold;
         }
 
         .calculator-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
         .button {
-            width: 100%;
-            height: 50px;
-            font-size: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #e0e0e0;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #e0e0e0 0%, #bdbdbd 100%);
+            border: 2px solid #bbb;
+            box-shadow:
+                0 2px 10px #444,
+                0 1px 0 #fff inset,
+                0 -2px 6px #fff3 inset;
+            color: #222;
+            font-size: 22px;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-weight: bold;
+            width: 62px;
+            height: 62px;
             cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            outline: none;
+        }
+        .button:active {
+            background: #ccc;
+            box-shadow: 0 0px 2px #222 inset, 0 0 2px #fff;
+            transform: scale(0.97);
+        }
+        .button:hover {
+            background: #d4eaff;
+            color: #003366;
+            box-shadow: 0 4px 24px #0099ff55, 0 2px 8px #444;
         }
 
-        .button:hover {
-            background-color: #d4d4d4;
+        .button:nth-child(1), .button:nth-child(2) {
+            background: linear-gradient(180deg, #ffdcdc 0%, #e0bdbd 100%);
+            color: #6d1212;
+        }
+        .button:last-child {
+            grid-column: span 4;
+            width: 100%;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #b2dfff 0%, #006699 100%);
+            color: #fff;
+            font-size: 28px;
+            box-shadow: 0 2px 8px #003366, 0 6px 12px #0099ff44;
+        }
+
+        /* Fake Casio screen border */
+        .lcd-frame {
+            position: relative;
+        }
+        .lcd-frame:before {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            right: 6px;
+            bottom: 6px;
+            border-radius: 6px;
+            border: 1px solid #81e281;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div class="calculator" id="calculator">
-        <input type="text" class="calculator-screen" id="calculator-screen" disabled>
+        <div class="casio-logo">CASIO</div>
+        <div class="lcd-frame">
+            <input type="text" class="calculator-screen" id="calculator-screen" disabled>
+        </div>
         <div class="calculator-buttons">
-            <button class="button" onclick="clearScreen()">C</button>
-            <button class="button" onclick="deleteChar()">DEL</button>
-            <button class="button" onclick="appendChar('/')">/</button>
-            <button class="button" onclick="appendChar('*')">*</button>
-            <button class="button" onclick="appendChar('7')">7</button>
-            <button class="button" onclick="appendChar('8')">8</button>
-            <button class="button" onclick="appendChar('9')">9</button>
-            <button class="button" onclick="appendChar('-')">-</button>
-            <button class="button" onclick="appendChar('4')">4</button>
-            <button class="button" onclick="appendChar('5')">5</button>
-            <button class="button" onclick="appendChar('6')">6</button>
-            <button class="button" onclick="appendChar('+')">+</button>
-            <button class="button" onclick="appendChar('1')">1</button>
-            <button class="button" onclick="appendChar('2')">2</button>
-            <button class="button" onclick="appendChar('3')">3</button>
-            <button class="button" onclick="calculateResult()">=</button>
-            <button class="button" onclick="appendChar('0')">0</button>
-            <button class="button" onclick="appendChar('.')">.</button>
+            <button class="button" onclick="clickAndPlay('C')">C</button>
+            <button class="button" onclick="clickAndPlay('DEL')">DEL</button>
+            <button class="button" onclick="clickAndPlay('/')">/</button>
+            <button class="button" onclick="clickAndPlay('*')">*</button>
+            <button class="button" onclick="clickAndPlay('7')">7</button>
+            <button class="button" onclick="clickAndPlay('8')">8</button>
+            <button class="button" onclick="clickAndPlay('9')">9</button>
+            <button class="button" onclick="clickAndPlay('-')">-</button>
+            <button class="button" onclick="clickAndPlay('4')">4</button>
+            <button class="button" onclick="clickAndPlay('5')">5</button>
+            <button class="button" onclick="clickAndPlay('6')">6</button>
+            <button class="button" onclick="clickAndPlay('+')">+</button>
+            <button class="button" onclick="clickAndPlay('1')">1</button>
+            <button class="button" onclick="clickAndPlay('2')">2</button>
+            <button class="button" onclick="clickAndPlay('3')">3</button>
+            <button class="button" onclick="clickAndPlay('0')">0</button>
+            <button class="button" onclick="clickAndPlay('.')">.</button>
+            <button class="button" onclick="clickAndPlay('=')" style="grid-column: span 4">=</button>
         </div>
     </div>
     <script>
@@ -103,6 +188,23 @@
         const triggerWords = [
             "hei", "lesbe", "esel", "hei lesbe", "hei esel"
         ];
+
+        // Simple click sound using Web Audio API
+        function playClickSound() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'square';
+            o.frequency.value = 540;
+            g.gain.value = 0.09;
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start();
+            setTimeout(() => {
+                o.stop();
+                ctx.close();
+            }, 38); // Short click
+        }
 
         function clearScreen() {
             document.getElementById("calculator-screen").value = "";
@@ -157,6 +259,20 @@
             let word = toUpsideDownWord(num);
             // Check for any trigger word in the mapped word (including phrases)
             return triggerWords.some(trigger => word.includes(trigger.replace(' ', '')));
+        }
+
+        // Unified button handler with sound and logic
+        function clickAndPlay(char) {
+            playClickSound();
+            if (char === 'C') {
+                clearScreen();
+            } else if (char === 'DEL') {
+                deleteChar();
+            } else if (char === '=') {
+                calculateResult();
+            } else {
+                appendChar(char);
+            }
         }
     </script>
 </body>
